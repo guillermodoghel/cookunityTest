@@ -60,7 +60,7 @@ class CookTest {
 
     private static boolean find(final Node<Step> node) {
         boolean res = false;
-        if (node.getData().val == B && node.getData().x != 0) {
+        if (node.getData().val == B && node.getData().x != STARTX && node.getData().y != STARTY) {
             System.out.println("\n");
             System.out.println("Solution #" + node.getData().path.hashCode());
             printSolution(node.getData().path);
