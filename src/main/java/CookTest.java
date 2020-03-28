@@ -64,7 +64,6 @@ class CookTest {
             System.out.println("\n");
             System.out.println("Solution #" + node.getData().path.hashCode());
             printSolution(node.getData().path);
-
             return true;
         } else {
             for (Node<Step> child : node.getChildren()) {
@@ -73,7 +72,6 @@ class CookTest {
                 }
             }
         }
-
         return res;
     }
 
@@ -142,7 +140,7 @@ class CookTest {
         int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
         sol[start.x][start.y] = 1;
         start.path = sol;
-        Node newnode = new Node<Step>(start);
+        Node newnode = new Node<>(start);
         node.addChild(newnode);
 
         return newnode;

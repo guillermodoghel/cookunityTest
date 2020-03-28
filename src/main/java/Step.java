@@ -6,6 +6,7 @@ public class Step {
     public boolean end;
     public int path[][];
 
+    //implementation for debugging reasons
     @Override
     public String toString() {
         return "Step{" +
