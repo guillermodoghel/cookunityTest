@@ -42,7 +42,7 @@ class CookTest {
         start.y = STARTY;
         start.end = false;
         start.path = initializePathMatrix();
-        start.path[STARTX][STARTY] = 1;
+        start.path[STARTX][STARTY] = GOAL;
 
         return new Node<>(start);
     }
@@ -118,7 +118,7 @@ class CookTest {
         start.y = newy;
         start.end = false;
         int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
-        sol[newx][newy] = 1;
+        sol[newx][newy] = MAZE[newx][newy];
         start.path = sol;
         Node newnode = new Node<Step>(start);
         node.addChild(newnode);
@@ -138,7 +138,7 @@ class CookTest {
             start.end = false;
         }
         int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
-        sol[start.x][start.y] = 1;
+        sol[start.x][start.y] = MAZE[newx][newy];
         start.path = sol;
         Node newnode = new Node<>(start);
         node.addChild(newnode);
@@ -149,28 +149,28 @@ class CookTest {
     static boolean canGoUp(final Node<Step> node, final boolean sameVal) {
         return node.getData().x - 1 >= 0 && node.getData().x - 1 < MAZE.length
             && node.getData().y >= 0 && node.getData().y < MAZE.length
-            && node.getData().path[node.getData().x - 1][node.getData().y] != 1
+            && node.getData().path[node.getData().x - 1][node.getData().y] == 0
             && (!(MAZE[node.getData().x - 1][node.getData().y] == node.getData().val) ^ sameVal);
     }
 
     static boolean canGoDown(final Node<Step> node, final boolean sameVal) {
         return node.getData().x + 1 >= 0 && node.getData().x + 1 < MAZE.length
             && node.getData().y >= 0 && node.getData().y < MAZE.length
-            && node.getData().path[node.getData().x + 1][node.getData().y] != 1
+            && node.getData().path[node.getData().x + 1][node.getData().y] == 0
             && (!(MAZE[node.getData().x + 1][node.getData().y] == node.getData().val) ^ sameVal);
     }
 
     static boolean canGoRight(final Node<Step> node, final boolean sameVal) {
         return node.getData().x >= 0 && node.getData().x < MAZE.length
             && node.getData().y + 1 >= 0 && node.getData().y + 1 < MAZE.length
-            && node.getData().path[node.getData().x][node.getData().y + 1] != 1
+            && node.getData().path[node.getData().x][node.getData().y + 1] == 0
             && (!(MAZE[node.getData().x][node.getData().y + 1] == node.getData().val) ^ sameVal);
     }
 
     static boolean canGoLeft(final Node<Step> node, final boolean sameVal) {
         return node.getData().x >= 0 && node.getData().x < MAZE.length
             && node.getData().y - 1 >= 0 && node.getData().y - 1 < MAZE.length
-            && node.getData().path[node.getData().x][node.getData().y - 1] != 1
+            && node.getData().path[node.getData().x][node.getData().y - 1] == 0
             && (!(MAZE[node.getData().x][node.getData().y - 1] == node.getData().val) ^ sameVal);
     }
 
