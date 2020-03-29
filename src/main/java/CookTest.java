@@ -24,18 +24,21 @@ class CookTest {
     };
 
     private static final int GOAL = B;
-    private static final int MAXSTEPS = 2; //val -1, cos 0 counts.
+    private static final int MAXSTEPS = 2; //val -1, cos I start counting in 0.
     private static final int STARTX = 0;
     private static final int STARTY = 1;
 
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
+        final long start = System.currentTimeMillis();
         final Node<Step> root = setup();
         deepExplore(root);
         find(root);
+        final long end = System.currentTimeMillis();
+        System.out.println("\n Took: " + (end - start) + "ms");
     }
 
     static Node<Step> setup() {
-        Step start = new Step();
+        final Step start = new Step();
         start.val = B;
         start.cant = MAXSTEPS;
         start.x = STARTX;
@@ -47,17 +50,7 @@ class CookTest {
         return new Node<>(start);
     }
 
-    static int[][] initializePathMatrix() {
-        int sol[][] = new int[MAZE.length][MAZE.length];
-
-        for (int i = 0; i < sol.length; i++) {
-            for (int j = 0; j < sol[i].length; j++) {
-                sol[i][j] = 0;
-            }
-        }
-        return sol;
-    }
-
+    //TODO mejorar a una busqueda que retorne una lista con todos los nodos solucion
     private static boolean find(final Node<Step> node) {
         boolean res = false;
         if (node.getData().val == B && node.getData().x != STARTX && node.getData().y != STARTY) {
@@ -76,9 +69,8 @@ class CookTest {
     }
 
     static void deepExplore(final Node<Step> node) {
-        if (node.getData().end) {
-            return;
-        }
+
+        //TODO could be rewritten in a millon different ways
         if (node.getData().cant != MAXSTEPS) {
             if (canGoDown(node, true)) {
                 deepExplore(move(node, node.getData().x + 1, node.getData().y));
@@ -110,8 +102,10 @@ class CookTest {
         }
     }
 
+    //TODO refactor with nodeFactory
     static Node<Step> move(final Node<Step> node, final int newx, final int newy) {
-        Step start = new Step();
+        final Step start = new Step();
+        //TODO getters setter and constructor
         start.val = node.getData().val;
         start.cant = node.getData().cant + 1;
         start.x = newx;
@@ -120,14 +114,15 @@ class CookTest {
         int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
         sol[newx][newy] = MAZE[newx][newy];
         start.path = sol;
-        Node newnode = new Node<Step>(start);
+        final Node newnode = new Node<Step>(start);
         node.addChild(newnode);
 
         return newnode;
     }
 
+    //TODO refactor with nodeFactory
     static Node<Step> jump(final Node<Step> node, final int newx, final int newy) {
-        Step start = new Step();
+        final Step start = new Step();
         start.val = MAZE[newx][newy];
         start.cant = 0;
         start.x = newx;
@@ -137,15 +132,17 @@ class CookTest {
         } else {
             start.end = false;
         }
-        int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
+        final int sol[][] = Arrays.stream(node.getData().path).map(int[]::clone).toArray(int[][]::new);
         sol[start.x][start.y] = MAZE[newx][newy];
         start.path = sol;
-        Node newnode = new Node<>(start);
+        final Node newnode = new Node<>(start);
         node.addChild(newnode);
 
         return newnode;
     }
 
+    //TODO refactor with DIRECTION as enum and single function
+    // HYPER-EDITION: direction vector for nDimentionMaze
     static boolean canGoUp(final Node<Step> node, final boolean sameVal) {
         return node.getData().x - 1 >= 0 && node.getData().x - 1 < MAZE.length
             && node.getData().y >= 0 && node.getData().y < MAZE.length
@@ -174,12 +171,42 @@ class CookTest {
             && (!(MAZE[node.getData().x][node.getData().y - 1] == node.getData().val) ^ sameVal);
     }
 
+    //TODO Could go in a utils
     static void printSolution(final int sol[][]) {
         for (int i = 0; i < MAZE.length; i++) {
             for (int j = 0; j < MAZE.length; j++) {
-                System.out.print(" " + sol[i][j] + " ");
+                System.out.print(" " + translateNumber(sol[i][j]) + " ");
             }
             System.out.println();
         }
+    }
+
+    //TODO puedo mover esto a un utils
+    static String translateNumber(final int foor) {
+        switch (foor) {
+        case 1:
+            return "A";
+        case 2:
+            return "B";
+        case 3:
+            return "C";
+        case 4:
+            return "D";
+        case 5:
+            return "E";
+        }
+        return "_";
+    }
+
+    //TODO puedo mover esto a un utils
+    static int[][] initializePathMatrix() {
+        int sol[][] = new int[MAZE.length][MAZE.length];
+
+        for (int i = 0; i < sol.length; i++) {
+            for (int j = 0; j < sol[i].length; j++) {
+                sol[i][j] = 0;
+            }
+        }
+        return sol;
     }
 }
